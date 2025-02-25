@@ -1,2 +1,8 @@
 # 42Cursus_snow_crash
-This project is an introduction to computer security. Snow Crash will make you discover security in various sub-domains, with a developer-oriented approach. You will become familiar with several languages (ASM/perl/php…), develop a certain logic to understand unknown programs, and become aware of problems linked to simple programming errors.
+Summary: This project is an introduction to computer security.
+
+Markdown in VS Code - Preview Markdown. Cmd+Shift+V (Mac) Ctrl+Shfit+V (Windows)
+
+Jesus: Levels 0, 2, 4, 6, 8, 10, 12 ,14
+
+Carlos: Levels 1, 3, 5, 7, 9, 11, 13
