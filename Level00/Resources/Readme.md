@@ -1,5 +1,11 @@
 # Level00
 
+## How to login
+
+```
+ssh level00@192.168.56.104 -p 4242
+password: level00
+```
 
 ## How to get the flag
 
