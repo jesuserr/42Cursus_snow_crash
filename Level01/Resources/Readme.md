@@ -6,7 +6,7 @@ To access the system, use the following SSH command:
 
 ```bash
 ssh level01@192.168.56.104 -p 4242
-password: level01
+password: x24ti5gi3x0ol2eh4esiuxias
 ```
 
 ## How to Get the Flag
